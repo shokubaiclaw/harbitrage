@@ -1,7 +1,7 @@
 /* ==========================================================================
    HARRISON ARBITRAGE LLC — GLOBAL WEB COMPONENTS & THEME MEDIA ENGINE (/main.js)
    Sidebar Architecture: Approach C (Compact Executive Sidebar)
-   Supports: All 9 Root HTML Pages + Multi-Brand 9:16 & 1:1 Theme Asset Sync
+   Supports: All 9 Root HTML Pages + Multi-Brand 9:16, 1:1 & Social Asset Sync
    ========================================================================== */
 
 /* Immediate Theme Restoration (Prevents Flash on Page Load) */
@@ -9,6 +9,51 @@
   const savedTheme = localStorage.getItem('harrison-theme') || 'dark';
   document.documentElement.setAttribute('data-theme', savedTheme);
 })();
+
+/* Official Social Asset Resolver (Flat Root Architecture) */
+function getSocialIconPath(network, isLight, ext = 'jpg') {
+  const mode = isLight ? 'Light' : 'Dark';
+  return `Social_${network}_${mode}.${ext}`;
+}
+
+/* Official Social Channels Builder (LinkedIn & Instagram Only) */
+function buildSocialIconsHTML(isLight, rowClass = 'sidebar-social-row') {
+  const socials = [
+    {
+      network: 'LinkedIn',
+      label: 'LinkedIn',
+      href: 'https://www.linkedin.com/company/harrison-arbitrage/'
+    },
+    {
+      network: 'Instagram',
+      label: 'Instagram',
+      href: 'https://www.instagram.com/harrisonarbitrage/'
+    }
+  ];
+
+  const linksHTML = socials.map(item => {
+    const jpgSrc = getSocialIconPath(item.network, isLight, 'jpg');
+    const pngFallback = getSocialIconPath(item.network, isLight, 'png');
+    return `
+      <a
+        href="${item.href}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="social-icon-link"
+        aria-label="Harrison Arbitrage LLC on ${item.label}"
+        title="Harrison Arbitrage on ${item.label}">
+        <img
+          src="${jpgSrc}"
+          data-network="${item.network}"
+          alt="${item.label}"
+          class="social-icon-img theme-social-icon"
+          onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='${pngFallback}';}else{this.style.display='none';}" />
+      </a>
+    `;
+  }).join('');
+
+  return `<div class="${rowClass}" aria-label="Official Social Channels">${linksHTML}</div>`;
+}
 
 function syncThemeMediaAssets() {
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
@@ -65,6 +110,17 @@ function syncThemeMediaAssets() {
     const nextText = isLight ? cap.dataset.captionLight : cap.dataset.captionDark;
     if (nextText) cap.textContent = nextText;
   });
+
+  /* 5. Sync Global Social Icons (.theme-social-icon) */
+  document.querySelectorAll('.theme-social-icon').forEach(img => {
+    const network = img.dataset.network;
+    if (!network) return;
+    const ext = img.dataset.triedPng === '1' ? 'png' : 'jpg';
+    const targetSrc = getSocialIconPath(network, isLight, ext);
+    if (img.getAttribute('src') !== targetSrc) {
+      img.setAttribute('src', targetSrc);
+    }
+  });
 }
 
 class HarrisonSidebar extends HTMLElement {
@@ -77,7 +133,7 @@ class HarrisonSidebar extends HTMLElement {
         href: 'publishing.html',
         id: 'publishing.html',
         label: 'Publishing Hub',
-        badge: '7 Books',
+        badge: '8 Books',
         badgeClass: 'gold',
         active: currentFile === 'publishing.html'
       },
@@ -85,7 +141,7 @@ class HarrisonSidebar extends HTMLElement {
         href: 'spotlight.html',
         id: 'spotlight.html',
         label: 'Current Spotlight',
-        badge: 'Book',
+        badge: 'New',
         badgeClass: 'gold',
         active: currentFile === 'spotlight.html'
       },
@@ -156,6 +212,7 @@ class HarrisonSidebar extends HTMLElement {
 
     const isLight = document.documentElement.getAttribute('data-theme') === 'light';
     const initialLogo = isLight ? 'Harrison_Arbitrage_Light.jpg' : 'Harrison_Arbitrage_Dark.jpg';
+    const sidebarSocialHTML = buildSocialIconsHTML(isLight, 'sidebar-social-row');
 
     this.innerHTML = `
       <div class="mobile-topbar">
@@ -193,6 +250,7 @@ class HarrisonSidebar extends HTMLElement {
           <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle Light/Dark Theme">
             ☀️ Switch to Light Mode
           </button>
+          ${sidebarSocialHTML}
           <div class="sidebar-gov-inline" aria-label="Company and Governance">
             ${govInlineHTML}
           </div>
@@ -253,18 +311,23 @@ class HarrisonSidebar extends HTMLElement {
 
 class HarrisonFooterCTA extends HTMLElement {
   connectedCallback() {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
     const heading = this.getAttribute('heading') || 'Advance Information Sovereignty & Strategic Arbitrage';
-    const subtext = this.getAttribute('subtext') || 'Explore our 7-volume strategic publishing catalog, deploy autonomous enterprise AI via Harrison AI Agents, or inquire about curated physical collectibles.';
+    const subtext = this.getAttribute('subtext') || 'Explore our 8-volume strategic publishing catalog—including our newest release, The Determinism Paradox—deploy autonomous enterprise AI via Harrison AI Agents, or inquire about curated physical collectibles.';
+    const footerSocialHTML = buildSocialIconsHTML(isLight, 'footer-social-row');
+
     this.innerHTML = `
       <section class="cta-banner">
         <span class="eyebrow">Harrison Arbitrage LLC • Maryland, USA</span>
         <h2>${heading}</h2>
         <p>${subtext}</p>
         <div class="btn-group" style="justify-content: center;">
-          <a href="publishing.html" class="btn btn-primary">Explore Publishing Hub →</a>
+          <a href="spotlight.html" class="btn btn-primary">📖 The Determinism Paradox →</a>
+          <a href="publishing.html" class="btn btn-secondary">Publishing Hub</a>
           <a href="brands.html" class="btn btn-secondary">Family of Brands</a>
           <a href="contact.html" class="btn btn-secondary">Enterprise Inquiries</a>
         </div>
+        ${footerSocialHTML}
       </section>
     `;
   }
