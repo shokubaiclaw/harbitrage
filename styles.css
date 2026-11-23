@@ -768,6 +768,57 @@ img, video {
 }
 
 /* ==========================================================================
+   7B. OFFICIAL SOCIAL CHANNELS (STRICT 1:1 FRAMES • ZERO RED / ZERO BLUE)
+   ========================================================================== */
+.sidebar-social-row,
+.footer-social-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.sidebar-social-row {
+  padding: 0.2rem 0;
+}
+
+.footer-social-row {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.social-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent-gold-border);
+  background: var(--bg-surface);
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.social-icon-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-gold);
+}
+
+.social-icon-img {
+  width: 34px;
+  height: 34px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.footer-social-row .social-icon-img {
+  width: 40px;
+  height: 40px;
+}
+
+/* ==========================================================================
    8. RESPONSIVE BREAKPOINTS
    ========================================================================== */
 @media (max-width: 960px) {
