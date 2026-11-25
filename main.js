@@ -133,7 +133,7 @@ class HarrisonSidebar extends HTMLElement {
         href: 'publishing.html',
         id: 'publishing.html',
         label: 'Publishing Hub',
-        badge: '8 Books',
+        badge: '10 Books',
         badgeClass: 'gold',
         active: currentFile === 'publishing.html'
       },
@@ -313,7 +313,7 @@ class HarrisonFooterCTA extends HTMLElement {
   connectedCallback() {
     const isLight = document.documentElement.getAttribute('data-theme') === 'light';
     const heading = this.getAttribute('heading') || 'Advance Information Sovereignty & Strategic Arbitrage';
-    const subtext = this.getAttribute('subtext') || 'Explore our 8-volume strategic publishing catalog—including our newest release, The Determinism Paradox—deploy autonomous enterprise AI via Harrison AI Agents, or inquire about curated physical collectibles.';
+    const subtext = this.getAttribute('subtext') || 'Explore our 10-volume strategic publishing catalog—featuring our newest releases, The Determinism Paradox and The Labyrinth, Part 4: The Ridge Home—deploy autonomous enterprise AI via Harrison AI Agents, or inquire about curated physical collectibles.';
     const footerSocialHTML = buildSocialIconsHTML(isLight, 'footer-social-row');
 
     this.innerHTML = `
@@ -323,6 +323,7 @@ class HarrisonFooterCTA extends HTMLElement {
         <p>${subtext}</p>
         <div class="btn-group" style="justify-content: center;">
           <a href="spotlight.html" class="btn btn-primary">📖 The Determinism Paradox →</a>
+          <a href="series-substrate-simulation.html" class="btn btn-secondary">📖 The Labyrinth, Part 4 →</a>
           <a href="publishing.html" class="btn btn-secondary">Publishing Hub</a>
           <a href="brands.html" class="btn btn-secondary">Family of Brands</a>
           <a href="contact.html" class="btn btn-secondary">Enterprise Inquiries</a>
